@@ -4,14 +4,23 @@ public class GameEngine {
     private int target;
     private int attempts;
     private boolean gameWon;
+
     private boolean userQuit;
+
+    private boolean hintsEnabled = true;
+    private String lastHint = "";
+
 
     public GameEngine(int min, int max) {
         this.min = min;
         this.max = max;
         this.attempts = 0;
         this.gameWon = false;
+
         this.userQuit = false;
+
+        this.hintsEnabled = true;
+
         reset();
     }
 
@@ -23,22 +32,33 @@ public class GameEngine {
         }
 
         attempts++;
-
+	//correct
         if (guess == target) {
             gameWon = true;
             return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
+
         } else if (guess < target) {
-            return new GuessResult(false, "Too low! Try a higher number.", attempts);
-        } else {
-            return new GuessResult(false, "Too high! Try a lower number.", attempts);
-        }
-    }
+    String hint = getHint(guess);
+    String msg = "Too low! Try a higher number." + hint; // hint already includes leading space
+    GuessResult result = new GuessResult(false, msg, attempts);
+    result.setHint(hint.trim()); // optional: makes getHint() not start with a space
+    return result;
+
+} else { // guess > target
+    String hint = getHint(guess);
+    String msg = "Too high! Try a lower number." + hint;
+    GuessResult result = new GuessResult(false, msg, attempts);
+    result.setHint(hint.trim());
+    return result;
+}
+}
 
     public void reset() {
         target = Utils.randomInt(min, max);
         attempts = 0;
         gameWon = false;
         userQuit = false;
+        lastHint = "";
     }
 
     public boolean isGameWon() {
@@ -59,6 +79,28 @@ public class GameEngine {
 
     public int getMax() {
         return max;
+    }
+
+    public boolean isHintsEnabled() {
+        return hintsEnabled;
+    }
+
+    public void setHintsEnabled(boolean enabled) {
+        this.hintsEnabled = enabled;
+    }
+
+    private String getHint(int guess) {
+        if (!hintsEnabled) {
+            return "";
+        }
+
+        int diff = Math.abs(target - guess);
+        if (attempts >= 3 && diff <= 10) {
+            return " HINT: You're very close!";
+        } else if (attempts >= 5 && diff <= 20) {
+            return " HINT: Getting warmer!";
+        }
+        return "";
     }
 
     // For testing purposes only
