@@ -10,8 +10,13 @@ public class GameUI {
     }
 
     public void start() {
+<<<<<<< HEAD
         while (!engine.isGameWon() && !engine.hasUserQuit()) {
             System.out.print("Guess a number between " + engine.getMin() + " and " + engine.getMax() + " (or negative to exit): ");
+=======
+        while (!engine.isGameWon() && !engine.isGameOver()) {
+            System.out.print("Guess a number between " + engine.getMin() + " and " + engine.getMax() + ": ");
+>>>>>>> e367776 (Implement max attempts logic and game over condition)
             int guess = Utils.readInt(scanner);
 
             GuessResult result = engine.makeGuess(guess);
