@@ -23,45 +23,34 @@ public class GameEngine {
         reset();
     }
 
-    public GuessResult makeGuess(int guess) {
-        // Check if user wants to quit (negative number)
-        if (guess < 0) {
-            userQuit = true;
-	    gameOver = true;
-            return new GuessResult(false, "Exiting game...", attempts);
-        }
+public GuessResult makeGuess(int guess) {
+    // Quit (negative number)
+    if (guess < 0) {
+        userQuit = true;
+        gameOver = true;
+        return new GuessResult(false, "Exiting game...", attempts);
+    }
 
-        attempts++;
-	if (attempts >= MAX_ATTEMPTS && guess != target){
-	gameOver = true;
+    attempts++;
+
+    // Correct guess
+    if (guess == target) {
+        gameWon = true;
+        gameOver = true;
+        return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
     }
-        if (guess == target) {
-            gameWon = true;
-	    gameOver = true;
-            return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
-<<<<<<< HEAD
-        } else if (guess < target) {
-            return new GuessResult(false, "Too low! Try a higher number.", attempts);
-        } else {
-            return new GuessResult(false, "Too high! Try a lower number.", attempts);
-=======
-        } else if (attempts >= MAX_ATTEMPTS) {
-            gameOver = true;
-            return new GuessResult(false, "Game Over! You've used all " + MAX_ATTEMPTS + " attempts. The number was " + target + ".", attempts);
-        } else {
-            int remaining = MAX_ATTEMPTS - attempts;
-            GuessResult result;
-            if (guess < target) {
-                result = new GuessResult(false, "Too low!", attempts);
-            } else {
-                result = new GuessResult(false, "Too high!", attempts);
-            }
-            result.setRemainingAttempts(remaining);
-            return result;
->>>>>>> e367776 (Implement max attempts logic and game over condition)
-        }
-	 
+
+    // Ran out of attempts (only after using one)
+    if (attempts >= MAX_ATTEMPTS) {
+        gameOver = true;
     }
+
+    if (guess < target) {
+        return new GuessResult(false, "Too low! Try a higher number.", attempts);
+    } else {
+        return new GuessResult(false, "Too high! Try a lower number.", attempts);
+    }
+}
 
     public void reset() {
         target = Utils.randomInt(min, max);
