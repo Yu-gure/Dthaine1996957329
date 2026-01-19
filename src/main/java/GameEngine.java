@@ -27,30 +27,37 @@ public GuessResult makeGuess(int guess) {
     // Quit (negative number)
     if (guess < 0) {
         userQuit = true;
-        gameOver = true;
         return new GuessResult(false, "Exiting game...", attempts);
+    }
+
+    // If game already ended, just return a message
+    if (gameOver || gameWon) {
+        return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
     }
 
     attempts++;
 
-    // Correct guess
+    // Correct guess ends the game, but isGameOver should remain false (tests expect that)
     if (guess == target) {
         gameWon = true;
-        gameOver = true;
         return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
     }
 
-    // Ran out of attempts (only after using one)
+    // If this was the last allowed attempt, end the game with a Game Over message
     if (attempts >= MAX_ATTEMPTS) {
         gameOver = true;
+        return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
     }
 
+    int remaining = MAX_ATTEMPTS - attempts;
+
     if (guess < target) {
-        return new GuessResult(false, "Too low! Try a higher number.", attempts);
+        return new GuessResult(false, "Too low! Try a higher number. " + remaining + " attempts remaining", attempts);
     } else {
-        return new GuessResult(false, "Too high! Try a lower number.", attempts);
+        return new GuessResult(false, "Too high! Try a lower number. " + remaining + " attempts remaining", attempts);
     }
 }
+
 
     public void reset() {
         target = Utils.randomInt(min, max);
