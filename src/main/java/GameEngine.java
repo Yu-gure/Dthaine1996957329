@@ -10,120 +10,82 @@ public class GameEngine {
     private boolean userQuit;
     private boolean gameOver;
 
-
-
     private boolean hintsEnabled = true;
     private String lastHint = "";
-
 
     public GameEngine(int min, int max) {
         this.min = min;
         this.max = max;
         this.attempts = 0;
         this.gameWon = false;
-
         this.userQuit = false;
-<<<<<<< HEAD
         this.gameOver = false;
-=======
-
         this.hintsEnabled = true;
->>>>>>> dev
-
         reset();
     }
 
-
-public GuessResult makeGuess(int guess) {
-    // Quit (negative number)
-    if (guess < 0) {
-        userQuit = true;
-        return new GuessResult(false, "Exiting game...", attempts);
-    }
-
     public GuessResult makeGuess(int guess) {
-        // Check if user wants to quit (negative number)
+        // Quit (negative number)
         if (guess < 0) {
             userQuit = true;
             return new GuessResult(false, "Exiting game...", attempts);
         }
 
+        // If game already ended
+        if (gameOver || gameWon) {
+            return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
+        }
+
         attempts++;
-	//correct
+
+        // Correct guess
         if (guess == target) {
             gameWon = true;
             return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
+        }
 
-        } else if (guess < target) {
-    String hint = getHint(guess);
-    String msg = "Too low! Try a higher number." + hint; // hint already includes leading space
-    GuessResult result = new GuessResult(false, msg, attempts);
-    result.setHint(hint.trim()); // optional: makes getHint() not start with a space
-    return result;
+        // If last attempt used up, end game
+        if (attempts >= MAX_ATTEMPTS) {
+            gameOver = true;
+            return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
+        }
 
-} else { // guess > target
-    String hint = getHint(guess);
-    String msg = "Too high! Try a lower number." + hint;
-    GuessResult result = new GuessResult(false, msg, attempts);
-    result.setHint(hint.trim());
-    return result;
-}
-}
+        int remaining = MAX_ATTEMPTS - attempts;
 
+        // Wrong guess message + hint (uses your existing getHint thresholds)
+        String hint = getHint(guess);
+        String msg;
 
-    // If game already ended, just return a message
-    if (gameOver || gameWon) {
-        return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
+        if (guess < target) {
+            msg = "Too low! Try a higher number. " + remaining + " attempts remaining" + hint;
+        } else {
+            msg = "Too high! Try a lower number. " + remaining + " attempts remaining" + hint;
+        }
+
+        GuessResult result = new GuessResult(false, msg, attempts);
+        result.setHint(hint.trim());
+        return result;
     }
-
-    attempts++;
-
-    // Correct guess ends the game, but isGameOver should remain false (tests expect that)
-    if (guess == target) {
-        gameWon = true;
-        return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
-    }
-
-    // If this was the last allowed attempt, end the game with a Game Over message
-    if (attempts >= MAX_ATTEMPTS) {
-        gameOver = true;
-        return new GuessResult(false, "Game Over. The number was " + target + ".", attempts);
-    }
-
-    int remaining = MAX_ATTEMPTS - attempts;
-
-    if (guess < target) {
-        return new GuessResult(false, "Too low! Try a higher number. " + remaining + " attempts remaining", attempts);
-    } else {
-        return new GuessResult(false, "Too high! Try a lower number. " + remaining + " attempts remaining", attempts);
-    }
-}
-
 
     public void reset() {
         target = Utils.randomInt(min, max);
         attempts = 0;
         gameWon = false;
         userQuit = false;
-<<<<<<< HEAD
         gameOver = false;
-
-=======
         lastHint = "";
->>>>>>> dev
     }
 
     public boolean isGameWon() {
         return gameWon;
     }
 
-
     public boolean hasUserQuit() {
         return userQuit;
     }
+
     public boolean isGameOver() {
         return gameOver;
-
     }
 
     public int getAttempts() {
@@ -151,9 +113,7 @@ public GuessResult makeGuess(int guess) {
     }
 
     private String getHint(int guess) {
-        if (!hintsEnabled) {
-            return "";
-        }
+        if (!hintsEnabled) return "";
 
         int diff = Math.abs(target - guess);
         if (attempts >= 3 && diff <= 10) {

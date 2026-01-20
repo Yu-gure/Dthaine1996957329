@@ -82,7 +82,7 @@ public class GameEngineTest {
         engine.makeGuess(-1);
         assertEquals(0, engine.getAttempts());
 }
-<<<<<<< HEAD
+
     public void testMaxAttemptsReached() {
         engine.setTarget(50);
         for (int i = 0; i < 10; i++) {
@@ -135,7 +135,6 @@ public class GameEngineTest {
         engine.reset();
         assertFalse(engine.isGameOver());
 
-=======
     @Test
     public void testHintVeryClose() {
         engine.setTarget(50);
@@ -204,6 +203,6 @@ public class GameEngineTest {
         }
         GuessResult result = engine.makeGuess(55);
         assertFalse(result.getHint().isEmpty());
->>>>>>> dev
+
     }
 }
