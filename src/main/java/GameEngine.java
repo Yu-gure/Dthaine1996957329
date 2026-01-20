@@ -33,14 +33,14 @@ public class GameEngine {
         reset();
     }
 
-<<<<<<< HEAD
+
 public GuessResult makeGuess(int guess) {
     // Quit (negative number)
     if (guess < 0) {
         userQuit = true;
         return new GuessResult(false, "Exiting game...", attempts);
     }
-=======
+
     public GuessResult makeGuess(int guess) {
         // Check if user wants to quit (negative number)
         if (guess < 0) {
@@ -69,7 +69,7 @@ public GuessResult makeGuess(int guess) {
     return result;
 }
 }
->>>>>>> dev
+
 
     // If game already ended, just return a message
     if (gameOver || gameWon) {
