@@ -67,7 +67,6 @@ public class GameEngineTest {
     }
 
     @Test
-
     public void testQuitWithNegativeNumber() {
         engine.setTarget(50);
         GuessResult result = engine.makeGuess(-1);
@@ -81,8 +80,9 @@ public class GameEngineTest {
         engine.setTarget(50);
         engine.makeGuess(-1);
         assertEquals(0, engine.getAttempts());
-}
+    }
 
+    @Test
     public void testMaxAttemptsReached() {
         engine.setTarget(50);
         for (int i = 0; i < 10; i++) {
@@ -116,7 +116,7 @@ public class GameEngineTest {
         for (int i = 0; i < 5; i++) {
             engine.makeGuess(1);
         }
-        GuessResult result = engine.makeGuess(50);
+        engine.makeGuess(50);
         assertTrue(engine.isGameWon());
         assertFalse(engine.isGameOver());
     }
@@ -134,6 +134,7 @@ public class GameEngineTest {
         }
         engine.reset();
         assertFalse(engine.isGameOver());
+    }
 
     @Test
     public void testHintVeryClose() {
@@ -203,6 +204,5 @@ public class GameEngineTest {
         }
         GuessResult result = engine.makeGuess(55);
         assertFalse(result.getHint().isEmpty());
-
     }
 }
